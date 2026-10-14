@@ -1,0 +1,68 @@
+
+<template>
+    <lightning-card
+        title="Dealer Order Console"
+        icon-name="standard:orders">
+
+        <div class="slds-p-around_medium">
+            <lightning-record-picker
+                label="Select Dealer Account"
+                placeholder="Search dealer accounts..."
+                object-api-name="Account"
+                onchange={handleDealerChange}>
+            </lightning-record-picker>
+
+            <template if:true={selectedDealerId}>
+                <div class="slds-m-top_medium">
+                    <lightning-input
+                        type="date"
+                        label="Requested Delivery Date"
+                        value={deliveryDate}
+                        required
+                        onchange={handleDateChange}>
+                    </lightning-input>
+                </div>
+
+                <div class="slds-m-top_medium slds-m-bottom_medium">
+                    <lightning-button
+                        label="Refresh Orders"
+                        onclick={handleLoadOrders}
+                        disabled={isBusy}>
+                    </lightning-button>
+
+                    <lightning-button
+                        class="slds-m-left_small"
+                        variant="brand"
+                        label="Create Draft Order"
+                        onclick={handleCreateOrder}
+                        disabled={isCreateDisabled}>
+                    </lightning-button>
+                </div>
+            </template>
+
+            <template if:true={isBusy}>
+                <lightning-spinner
+                    alternative-text="Processing"
+                    size="small">
+                </lightning-spinner>
+            </template>
+
+            <template if:true={hasLoadedOrders}>
+                <template if:true={hasOrders}>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={orders}
+                        columns={columns}
+                        hide-checkbox-column>
+                    </lightning-datatable>
+                </template>
+
+                <template if:false={hasOrders}>
+                    <p class="slds-p-vertical_medium">
+                        No orders found for this dealer.
+                    </p>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>
